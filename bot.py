@@ -3,7 +3,7 @@ import pytesseract
 import telebot
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-bot = telebot.TeleBot("1940450587:AAFdzXtjXOVxPhNveqNB8eGCQXWBz0r0x_g")
+bot = telebot.TeleBot("1940450587:AAGBeJzbp8_mQJ1MUNCYWVa8dLDl-EjlxJs")
 
 
 @bot.message_handler(content_types=["text"])
@@ -11,9 +11,19 @@ def parse_message(message):
     chat = message.chat
 
     if chat.type == "private":
-        bot.send_message(message.chat.id, "Привет. Я - бот, который борется с Жаком Фреско (@fresco_guard_bot). Добавь "
-                                          "меня в чат с Жакой чтоб я решал за вас уравнения или пересылай мне его "
-                                          "картинки")
+        bot.send_message(chat.id, "Привет. Я - бот, который борется с Жаком Фреско (@fresco_guard_bot). Добавь "
+                                  "меня в чат с Жакой чтоб я решал за вас уравнения или пересылай мне его "
+                                  "картинки")
+
+
+@bot.message_handler(commands=["start", "help"])
+def parse_commands(message):
+    chat = message.chat
+
+    if chat.type == "private":
+        bot.send_message(chat.id, "Привет. Я - бот, который борется с Жаком Фреско (@fresco_guard_bot). Добавь "
+                                  "меня в чат с Жакой чтоб я решал за вас уравнения или пересылай мне его "
+                                  "картинки")
 
 
 @bot.message_handler(content_types=["photo"])
@@ -21,8 +31,8 @@ def parse_message(message):
     if message.from_user.username == "fresco_guard_bot" or message.forward_from.username == "fresco_guard_bot":
         tg_photo = bot.get_file(message.photo[-1].file_id)
         photo = bot.download_file(tg_photo.file_path)
-        with open("photo.jpg", "wb") as f:
-            f.write(photo)
+
+        open("photo.jpg", "wb").write(photo)
 
         frame = cv2.imread("photo.jpg", cv2.IMREAD_GRAYSCALE)
         roi = frame[128:186, 40:333]
